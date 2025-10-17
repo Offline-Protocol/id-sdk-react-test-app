@@ -1,40 +1,22 @@
 "use client";
-import { useState } from "react";
 import {
   OfflineAppProvider,
   useAuth,
   useConnections,
   useProfiles,
 } from "@offline-protocol/id-react";
-import { Mail, User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Connections from "@/components/Connections";
 import Profiles from "@/components/Profiles";
-// import Nodes from "@/components/Nodes";
 
 function LoginForm() {
-  const { sendCode, verifyCode, user } = useAuth();
+  const { user, loginWithModal, logout } = useAuth();
   const { connections } = useConnections();
   const { profiles } = useProfiles();
-  const [email, setEmail] = useState("aditipolkam@gmail.com");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState(1);
-
-  const handleSendCode = async () => {
-    const ok = await sendCode(email);
-    if (ok) setStep(2);
-  };
-
-  const handleVerify = async () => {
-    const ok = await verifyCode(email, otp);
-    if (ok) {
-      // Success handled by state change
-    }
-  };
 
   if (user) {
     return (
@@ -52,7 +34,7 @@ function LoginForm() {
               <Button variant="ghost" size="sm">
                 <Settings className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={logout}>
                 <LogOut className="w-4 h-4" />
               </Button>
             </div>
@@ -81,7 +63,7 @@ function LoginForm() {
                   <CardTitle className="text-2xl font-bold text-slate-900 mb-1">
                     {user.username}
                   </CardTitle>
-                  <p className="text-slate-600 text-sm">{email}</p>
+                  <p className="text-slate-600 text-sm">{user.email}</p>
                   <Badge variant="secondary" className="mt-2">
                     Active Profile
                   </Badge>
@@ -119,85 +101,41 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white shadow-xl border-0">
-        <CardHeader className="text-center pb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <User className="w-8 h-8 text-white" />
-          </div>
-          <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
-            Welcome to Social Hub
-          </CardTitle>
-          <p className="text-slate-600">
-            {step === 1
-              ? "Enter your email to get started"
-              : "Check your email for the verification code"}
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {step === 1 ? (
-            <>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="pl-10 h-12 border-slate-200 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-              <Button
-                onClick={handleSendCode}
-                className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold"
-              >
-                Send Verification Code
-              </Button>
-            </>
-          ) : (
-            <>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">
-                  Verification Code
-                </label>
-                <Input
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter 6-digit code"
-                  className="h-12 text-center text-lg font-mono border-slate-200 focus:border-blue-500"
-                  maxLength={6}
-                />
-              </div>
-              <Button
-                onClick={handleVerify}
-                className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold"
-              >
-                Verify & Sign In
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setStep(1)}
-                className="w-full text-slate-600 hover:text-slate-900"
-              >
-                Back to Email
-              </Button>
-            </>
-          )}
-        </CardContent>
-      </Card>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-6">
+      <div className="max-w-3xl text-center bg-white/70 backdrop-blur-xl shadow-lg rounded-2xl p-10 border border-white/40">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          Welcome to <span className="text-blue-600">Offline Protocol</span>
+        </h1>
+        <p className="text-gray-600 text-lg mb-8">
+          Seamless login and profile management made simple — secure, fast, and
+          beautiful.
+        </p>
+        <button
+          className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all"
+          onClick={loginWithModal}
+        >
+          Get Started
+        </button>
+
+        <div className="mt-10 flex justify-center gap-6 text-sm text-gray-500">
+          <a href="#" className="hover:text-blue-600">
+            Docs
+          </a>
+          <a href="#" className="hover:text-blue-600">
+            GitHub
+          </a>
+          <a href="#" className="hover:text-blue-600">
+            Contact
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function App() {
   return (
-    <OfflineAppProvider apiKey="7b9bdb1d-6115-4efa-9538-64b0ca19a707">
+    <OfflineAppProvider apiKey={process.env.NEXT_PUBLIC_PROJECT_ID as string}>
       <LoginForm />
     </OfflineAppProvider>
   );
