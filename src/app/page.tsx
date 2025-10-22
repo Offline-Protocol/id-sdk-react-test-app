@@ -118,13 +118,22 @@ function LoginForm() {
         </button>
 
         <div className="mt-10 flex justify-center gap-6 text-sm text-gray-500">
-          <a href="#" className="hover:text-blue-600">
+          <a
+            href="https://docs.offlineprotocol.com"
+            className="hover:text-blue-600"
+          >
             Docs
           </a>
-          <a href="#" className="hover:text-blue-600">
+          <a
+            href="https://github.com/Offline-Protocol"
+            className="hover:text-blue-600"
+          >
             GitHub
           </a>
-          <a href="#" className="hover:text-blue-600">
+          <a
+            href="mailto:support@offlineprotocol.com"
+            className="hover:text-blue-600"
+          >
             Contact
           </a>
         </div>
@@ -135,7 +144,9 @@ function LoginForm() {
 
 export default function App() {
   return (
-    <OfflineAppProvider apiKey={process.env.NEXT_PUBLIC_PROJECT_ID as string}>
+    <OfflineAppProvider
+      projectId={process.env.NEXT_PUBLIC_PROJECT_ID as string}
+    >
       <LoginForm />
     </OfflineAppProvider>
   );
